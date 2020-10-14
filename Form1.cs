@@ -24,7 +24,6 @@ namespace KG_task2
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             DrawGrid(32, size);
-            Midptellipse(3, 3, 3, 3);
         }
 
 
