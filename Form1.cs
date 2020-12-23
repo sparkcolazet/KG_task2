@@ -48,7 +48,7 @@ namespace KG_task2
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                DrawBigPixel(x1, y1);
+                DrawBigPixel(x1, y1, size);
                 numerator += shortest;
                 if (!(numerator < longest))
                 {
@@ -64,91 +64,6 @@ namespace KG_task2
             }
         }
 
-
-        public void BresenhamEllipse(int xc, int yc, int rx, int ry)
-        {
-            //Grid grid = new Grid();
-            double dx, dy, d1, d2;
-            int x, y;
-            x = 0;
-            y = ry;
-
-            // Initial decision parameter of region 1 
-            d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
-            dx = 2 * ry * ry * x;
-            dy = 2 * rx * rx * y;
-
-            // For region 1 
-            while (dx < dy)
-            {
-
-                // Print points based on 4-way symmetry 
-                /*grid.DrawPixel(brush, x + xc, y + yc, graphics);
-                grid.DrawPixel(brush, -x + xc, y + yc, graphics);
-                grid.DrawPixel(brush, x + xc, -y + yc, graphics);
-                grid.DrawPixel(brush, -x + xc, -y + yc, graphics);*/
-
-                DrawBigPixel(x + xc, y + yc);
-                DrawBigPixel(-x + xc, y + yc);
-                DrawBigPixel(x + xc, -y + yc);
-                DrawBigPixel(-x + xc, -y + yc);
-
-                // Checking and updating value of 
-                // decision parameter based on algorithm 
-                if (d1 < 0)
-                {
-                    x++;
-                    dx = dx + (2 * ry * ry);
-                    d1 = d1 + dx + (ry * ry);
-                }
-                else
-                {
-                    x++;
-                    y--;
-                    dx = dx + (2 * ry * ry);
-                    dy = dy - (2 * rx * rx);
-                    d1 = d1 + dx - dy + (ry * ry);
-                }
-            }
-
-            // Decision parameter of region 2 
-            d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) +
-                 ((rx * rx) * ((y - 1) * (y - 1))) -
-                  (rx * rx * ry * ry);
-
-            // Plotting points of region 2 
-            while (y >= 0)
-            {
-
-                // Print points based on 4-way symmetry 
-                /*grid.DrawPixel(brush, x + xc, y + yc, graphics);
-                grid.DrawPixel(brush, -x + xc, y + yc, graphics);
-                grid.DrawPixel(brush, x + xc, -y + yc, graphics);
-                grid.DrawPixel(brush, -x + xc, -y + yc, graphics);*/
-
-                DrawBigPixel(x + xc, y + yc);
-                DrawBigPixel(-x + xc, y + yc);
-                DrawBigPixel(x + xc, -y + yc);
-                DrawBigPixel(-x + xc, -y + yc);
-
-                // Checking and updating parameter 
-                // value based on algorithm 
-                if (d2 > 0)
-                {
-                    y--;
-                    dy = dy - (2 * rx * rx);
-                    d2 = d2 + (rx * rx) - dy;
-                }
-                else
-                {
-                    y--;
-                    x++;
-                    dx = dx + (2 * ry * ry);
-                    dy = dy - (2 * rx * rx);
-                    d2 = d2 + dx - dy + (rx * rx);
-                }
-            }
-        }
 
 
 
@@ -167,27 +82,17 @@ namespace KG_task2
             }
         }
 
-		private void DrawBigPixel(int x,int y)
+		private void DrawBigPixel(int x,int y, int cellSize)
 		{
             Graphics g = CreateGraphics();
             SolidBrush pixelBrush = new SolidBrush(Color.Red);
-            int bitMapXCoordinate = (x - 1) * size;
-            int bitMapYCoordinate = (y - 1)  * size;
-            Rectangle rect = new Rectangle(bitMapXCoordinate, bitMapYCoordinate, size, size);
+            int bitMapXCoordinate = (x - 1) * cellSize;
+            int bitMapYCoordinate = (y - 1)  * cellSize;
+            Rectangle rect = new Rectangle(bitMapXCoordinate, bitMapYCoordinate, cellSize, cellSize);
             g.FillRectangle(pixelBrush, rect);
         }
 
-		private void Form1_Load(object sender, EventArgs e)
-		{
 
-		}
-
-		
-
-		private void textBox1_TextChanged(object sender, EventArgs e)
-		{
-            
-		}
 
 		private void button1_Click(object sender, EventArgs e)
         {
@@ -195,20 +100,20 @@ namespace KG_task2
             int y1 = int.Parse(textBox2.Text);
             int x2 = int.Parse(textBox3.Text);
             int y2 = int.Parse(textBox4.Text);
-
+            Graphics g = CreateGraphics();
+            g.Clear(Color.White);
+            DrawGrid(32, size);
             Bresenham(x1, y1, x2, y2);
 
 
         }
 
-		private void button2_Click(object sender, EventArgs e)
-		{
-            int x = int.Parse(textBox5.Text);
-            int y = int.Parse(textBox6.Text);
-            int rx = int.Parse(textBox7.Text);
-            int ry = int.Parse(textBox8.Text);
-
-            BresenhamEllipse(x, y, rx, ry);
-		}
-	}
+        private void button2_Click(object sender, EventArgs e)
+        {
+            size = int.Parse(textBox5.Text);
+            Graphics g = CreateGraphics();
+            g.Clear(Color.White);
+            DrawGrid(32, size);
+        }
+    }
 }
